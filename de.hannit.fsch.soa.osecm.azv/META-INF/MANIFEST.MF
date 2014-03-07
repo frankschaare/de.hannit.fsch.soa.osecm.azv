@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: AZVClient
+Bundle-SymbolicName: de.hannit.fsch.soa.osecm.azv
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: de.hannit.fsch.soa.osecm.azv.Activator
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Import-Package: org.osgi.framework;version="1.3.0"
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .,
+ lib/de.optimalsystems.schemas.osecm.ws.jar
+Require-Bundle: de.hannit.fsch.soa.osecm;bundle-version="1.0.0",
+ org.eclipse.equinox.registry
+Service-Component: OSGI-INF/service.xml
