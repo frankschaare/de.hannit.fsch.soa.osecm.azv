@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="user">wannaknow ?</entry>
+<entry key="password">secret</entry>
+<entry key="flags">0</entry>
+<entry key="info">4</entry>
+<entry key="encoding">UTF-8</entry>
+<entry key="xPathBerichtsMonat">/DMSQuery/Archive/ObjectType/Conditions/ConditionObject/FieldCondition[@name='Monat']/Value</entry>
+<entry key="xPathBerichtsJahr">/DMSQuery/Archive/ObjectType/Conditions/ConditionObject/FieldCondition[@name='Jahr']/Value</entry>
+</properties>
