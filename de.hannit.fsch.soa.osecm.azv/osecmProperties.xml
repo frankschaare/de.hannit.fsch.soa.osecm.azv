@@ -6,4 +6,6 @@
 <entry key="flags">0</entry>
 <entry key="info">4</entry>
 <entry key="encoding">UTF-8</entry>
+<entry key="xPathBerichtsMonat">/DMSQuery/Archive/ObjectType/Conditions/ConditionObject/FieldCondition[@name='Monat']/Value</entry>
+<entry key="xPathBerichtsJahr">/DMSQuery/Archive/ObjectType/Conditions/ConditionObject/FieldCondition[@name='Jahr']/Value</entry>
 </properties>
