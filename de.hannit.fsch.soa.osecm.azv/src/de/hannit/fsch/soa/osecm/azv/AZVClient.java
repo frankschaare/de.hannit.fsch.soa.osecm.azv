@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Properties;
@@ -49,15 +50,24 @@ import de.optimalsystems.schemas.osecm.ws.types.StringParameter;
 
 /**
  * @author fsch
+ * 
+ * Wie funktioniert die Verbindung zum AZV-Webservice ?
+ * 
+ * In der Application.e4xmiwird die Menüleiste des Haupfensters definiert. Dort gibt es einen Menüeintrag 'Services'.
+ * Beim Start der Applikation wird die Menüleiste initialisiert
+ * 
+ * Der Untereintrag AZV Webservice ist mit dem Command: de.hannit.fsch.rcp.klr.services.azv.open verknüpft.
+ * Dieser Command ist mit einem Handler verknüpft, welcher die Klasse 'de.hannit.fsch.rcp.klr.handler.azv.OpenAZVServiceHandler' initialisiert 
  *
  */
 public class AZVClient implements IAZVClient
 {
+private URL urlWebservice = null;	
 private	Properties props = null;
 private Authentication auth = null;
 private URL xmlURL = null;
 private Base64AsStringParameter xmlRequest = null;
-private EcmWsMtomSoapService service = new EcmWsMtomSoapService();
+private EcmWsMtomSoapService service = null;
 private DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 private Document request = null;
 private XPathFactory xpathfactory = XPathFactory.newInstance();
@@ -84,8 +94,19 @@ private TransformerFactory tFactory = TransformerFactory.newInstance();
 		catch (IOException e)
 		{
 		e.printStackTrace();
-		}	
+		}
 		
+	// Lade IP des Enaio-Webservices aus den Properties	
+		try
+		{
+		urlWebservice = new URL(props.getProperty("url"));
+		}
+		catch (MalformedURLException e1)
+		{
+		e1.printStackTrace();
+		}
+	service = new EcmWsMtomSoapService(urlWebservice);
+	
 	auth = new Authentication();
 	auth.setUser(props.getProperty("user"));
 	auth.setPassword(props.getProperty("password"));
@@ -113,40 +134,7 @@ private TransformerFactory tFactory = TransformerFactory.newInstance();
 	@Override
 	public String getServerInfo()
 	{
-	String serverInfo = null;
-	
-	IntegerParameter flags = new IntegerParameter();
-	flags.setName(IAZVClient.PARAMETER_INTEGER_FLAGS);
-	flags.setValue(Integer.parseInt(props.getProperty("flags")));
-	
-	IntegerParameter info = new IntegerParameter();
-	info.setName(IAZVClient.PARAMETER_INTEGER_INFO);
-	info.setValue(Integer.parseInt(props.getProperty("info")));
-	
-	Job job = new Job();
-	job.setName(IAZVClient.JOB_GETSERVERINFO);
-	List<Parameter> parameter = job.getParameter();
-	parameter.add(flags);
-	parameter.add(info);
-	
-	ExecuteParameter execPara = new ExecuteParameter();
-	execPara.setAuthentication(auth);
-	execPara.setJob(job);
-	
-	OsecmWsPortType port = service.getPort(OsecmWsPortType.class);
-	
-		try
-		{
-		ExecuteParameter response = port.execute(execPara);
-		StringParameter comString = (StringParameter)response.getJob().getParameter().get(1);
-		serverInfo = comString.getValue();
-		}
-		catch (OsecmWsFaultException e)
-		{
-		e.printStackTrace();
-		}
-		
-	return serverInfo;
+	return props.getProperty("ip");
 	}
 
 	/**
@@ -170,6 +158,12 @@ private TransformerFactory tFactory = TransformerFactory.newInstance();
     encoding.setName("Encoding");
     encoding.setValue("UTF-8");
     parameter.add(encoding);
+    
+    // Harte Mann:
+    StringParameter RequestType = new StringParameter();
+    RequestType.setName("RequestType");
+    RequestType.setValue("HOL");
+    parameter.add(RequestType);
     
     StringParameter outputFormat = new StringParameter();
     outputFormat.setName("OutputFormat");
